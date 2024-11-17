@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cygnus - Products</title>
+    <style>
+        :root {
+            --primary: #6E3CBC;
+            --secondary: #3BACB6;
+            --dark: #0B0B0F;
+            --light: #F2F2F2;
+            --accent: #E94560;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem;
+            z-index: 100;
+            background: rgba(11, 11, 15, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 5s linear infinite;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .products-header {
+            padding-top: 120px;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .products-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .products-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(110, 60, 188, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(110, 60, 188, 0.1);
+            border-color: var(--primary);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--light);
+        }
+
+        .product-content h2 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .product-content p {
+            color: rgba(242, 242, 242, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-features li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .product-features li::before {
+            content: '•';
+            color: var(--accent);
+            position: absolute;
+            left: 0;
+        }
+
+        .product-button {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 30px;
+            color: var(--light);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            text-decoration: none;
+            margin-top: auto;
+        }
+
+        .product-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(110, 60, 188, 0.2);
+        }
+
+        @keyframes gradientFlow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .products-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .products-grid {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">CYGNUS</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#products">Products</a>
+                <a href="#shop">Shop</a>
+                <a href="#about">About Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="products-header">
+        <h1>Our Innovative Solutions</h1>
+        <p>Discover the future of technology with our cutting-edge products</p>
+    </header>
+
+    <main class="products-grid">
+        <div class="product-card">
+            <div class="product-image">💻</div>
+            <div class="product-content">
+                <h2>Nano_Process_On</h2>
+                <p>Transform any USB drive into a fully functional PC with our revolutionary virtualization technology.</p>
+                <ul class="product-features">
+                    <li>Run any operating system</li>
+                    <li>Compatible with any USB-enabled device</li>
+                    <li>Affordable computing solution</li>
+                    <li>Portable and secure</li>
+                </ul>
+                <a href="#" class="product-button">Learn More</a>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image">📱</div>
+            <div class="product-content">
+                <h2>MoMose</h2>
+                <p>Experience Windows on your Android device with our advanced mobile platform.</p>
+                <ul class="product-features">
+                    <li>Full Windows compatibility</li>
+                    <li>Optimized touch interface</li>
+                    <li>Resource-efficient virtualization</li>
+                    <li>Seamless integration</li>
+                </ul>
+                <a href="#" class="product-button">Learn More</a>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image">🔮</div>
+            <div class="product-content">
+                <h2>Overlayerd</h2>
+                <p>Revolutionary transparent crystal display technology for immersive augmented reality experiences.</p>
+                <ul class="product-features">
+                    <li>Crystal-clear transparency</li>
+                    <li>Seamless AR integration</li>
+                    <li>Versatile applications</li>
+                    <li>Energy-efficient design</li>
+                </ul>
+                <a href="#" class="product-button">Learn More</a>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image">♻️</div>
+            <div class="product-content">
+                <h2>AIR Carbon</h2>
+                <p>Innovative CO₂ conversion technology for creating sustainable biodegradable plastics.</p>
+                <ul class="product-features">
+                    <li>Eco-friendly production</li>
+                    <li>Automated processing</li>
+                    <li>Biodegradable output</li>
+                    <li>Reduced carbon footprint</li>
+                </ul>
+                <a href="#" class="product-button">Learn More</a>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image">🤖</div>
+            <div class="product-content">
+                <h2>ARIA</h2>
+                <p>Advanced AI assistant delivering personalized and context-aware interactions.</p>
+                <ul class="product-features">
+                    <li>Natural language processing</li>
+                    <li>Context-aware responses</li>
+                    <li>Multi-platform support</li>
+                    <li>Continuous learning</li>
+                </ul>
+                <a href="#" class="product-button">Learn More</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
