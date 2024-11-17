@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cygnus - Innovation Redefined</title>
+    
+    <!-- Set Favicon -->
+    <link rel="icon" href="cygnus.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="cygnus.ico" type="image/x-icon">
+    <style>
+        :root {
+            --primary: #6E3CBC;    /* Deep Purple */
+            --secondary: #3BACB6;  /* Turquoise */
+            --dark: #0B0B0F;       /* Darker background */
+            --light: #F2F2F2;
+            --accent: #E94560;     /* Accent color for highlights */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 1s ease-in-out 2s forwards;
+        }
+
+        .loader-circle {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--secondary);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem;
+            z-index: 100;
+            background: rgba(11, 11, 15, 0.9);
+            backdrop-filter: blur(10px);
+            transform: translateY(-100%);
+            animation: slideDown 0.5s ease-out 2.5s forwards;
+        }
+
+        @keyframes slideDown {
+            to { transform: translateY(0); }
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 5s linear infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            animation: colorCycle 10s infinite;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 30px;
+            color: var(--light);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(110, 60, 188, 0.2);
+        }
+
+        /* Floating Shapes */
+        .shape {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            opacity: 0.15;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            filter: blur(30px);
+            animation: morphing 20s ease-in-out infinite;
+        }
+
+        @keyframes morphing {
+            0%, 100% {
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            }
+            25% {
+                border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+            }
+            50% {
+                border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+            }
+            75% {
+                border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+            }
+        }
+
+        .shape:nth-child(1) { top: 15%; left: 15%; animation-delay: 0s; }
+        .shape:nth-child(2) { top: 55%; right: 15%; animation-delay: -7s; }
+        .shape:nth-child(3) { bottom: 15%; left: 25%; animation-delay: -14s; }
+
+        /* Services Section */
+        .services {
+            padding: 8rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s;
+        }
+
+        .services-grid.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(110, 60, 188, 0.1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(110, 60, 188, 0.1);
+            border-color: var(--primary);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(110, 60, 188, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .service-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .service-card h2 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: rgba(242, 242, 242, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Cursor Trail */
+        .cursor-trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .service-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loader">
+        <div class="loader-circle"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">CYGNUS</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#products">Prducts</a>
+                <a href="#shop">Shop</a>
+                <a href="#about">About Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        
+        <div class="hero-content">
+            <h1>Innovation Beyond </h1>
+            <p>Transforming ideas into digital reality</p>
+            <button class="cta-button">Explore</button>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="services-grid">
+            <div class="service-card">
+                <h2>Nano_Process_On</h2>
+                <p>Turn any pen drive into a portable PC using virtualization. Plug it into any USB-enabled device to access a full operating system and run software, offering affordable and accessible computing for work, education, and entertainment.</p>
+            </div>
+            <div class="service-card">
+                <h2>MoMose</h2>
+                <p>Experience Windows on Android devices with MoMose. This mobile platform uses advanced virtualization for smooth multi-OS performance, transforming your smartphone into a powerful PC for work, gaming, and more.</p>
+            </div>
+            <div class="service-card">
+                <h2>Overlayerd</h2>
+                <p>A transparent crystal display that blends digital content with the real world. Ideal for AR, head-up displays, and interactive spaces, Overlayerd delivers immersive experiences with cutting-edge spatial computing.</p>
+            </div>
+            <div class="service-card">
+                <h2>AIR Carbon</h2>
+                <p>Convert CO₂ into biodegradable plastic using everyday materials. Enhanced with automation, AIR Carbon offers a sustainable alternative to traditional plastics, reducing emissions and promoting eco-friendly solutions.</p>
+            </div>
+            <div class="service-card">
+                <h2>ARIA</h2>
+                <p>ARIA (Artificial Responsive Intelligent Assistant) is an advanced AI-powered chatbot developed to provide users with a seamless, engaging, and versatile digital assistant experience. It combines state-of-the-art natural language processing and machine learning technologies to deliver accurate, helpful, and context-aware responses.</p>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <script>
+        // Mouse trail effect
+        function createTrail(e) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = e.pageX + 'px';
+            trail.style.top = e.pageY + 'px';
+            document.body.appendChild(trail);
+
+            trail.style.animation = 'pulse 0.5s linear forwards';
+            setTimeout(() => {
+                trail.remove();
+            }, 500);
+        }
+
+        document.addEventListener('mousemove', createTrail);
+
+        // Parallax effect for hero content
+        document.addEventListener('mousemove', (e) => {
+            const heroContent = document.querySelector('.hero-content');
+            const x = (window.innerWidth - e.pageX * 2) / 100;
+            const y = (window.innerHeight - e.pageY * 2) / 100;
+            heroContent.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.services-grid').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Floating shapes animation
+        const shapes = document.querySelectorAll('.shape');
+        document.addEventListener('mousemove', (e) => {
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                const x = (window.innerWidth - e.pageX * speed) / 100;
+                const y = (window.innerHeight - e.pageY * speed) / 100;
+                shape.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
