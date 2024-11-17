@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Cygnus</title>
+    <link rel="icon" href="cygnus.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="cygnus.ico" type="image/x-icon">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        :root {
+            --primary: #6E3CBC;
+            --secondary: #3BACB6;
+            --dark: #0B0B0F;
+            --light: #F2F2F2;
+            --accent: #E94560;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--light);
+        }
+
+        .navbar {
+            position: fixed;
+            width: 100%;
+            padding: 1.5rem;
+            z-index: 100;
+            background: rgba(11, 11, 15, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .main-content {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 2rem 2rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            border: 1px solid rgba(110, 60, 188, 0.1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-details {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .product-description {
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .storage-options {
+            margin-bottom: 1rem;
+        }
+
+        .storage-options select {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--secondary);
+            color: var(--light);
+            border-radius: 5px;
+            margin-top: 0.5rem;
+        }
+
+        .buy-button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: var(--light);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1rem;
+        }
+
+        .buy-button:hover {
+            background: var(--secondary);
+        }
+
+        .price-note {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">CYGNUS</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                 <a href="product.html">Prducts</a>
+                <a href="shop.html">Shop</a>
+                <a href="about.html">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Shop Our Products</h1>
+        
+        <div class="products-grid">
+            <!-- Nano_Process_On -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="/api/placeholder/300/200" alt="Nano_Process_On">
+                </div>
+                <div class="product-details">
+                    <h2 class="product-title">Nano_Process_On</h2>
+                    <p class="product-description">Transform any device into a powerful computing station. Experience seamless portable computing with our revolutionary technology.</p>
+                    <div class="storage-options">
+                        <label>Storage Capacity:</label>
+                        <select id="nano-storage" onchange="updatePrice('nano')">
+                            <option value="32">32GB - ₹7,999</option>
+                            <option value="64">64GB - ₹9,999</option>
+                            <option value="128">128GB - ₹12,999</option>
+                        </select>
+                    </div>
+                    <p class="product-price" id="nano-price">₹7,999</p>
+                    <button class="buy-button" onclick="initiatePayment('nano')">Buy Now</button>
+                    <p class="price-note">*Inclusive of all taxes</p>
+                </div>
+            </div>
+
+            <!-- Overlayerd -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="/api/placeholder/300/200" alt="Overlayerd">
+                </div>
+                <div class="product-details">
+                    <h2 class="product-title">Overlayerd</h2>
+                    <p class="product-description">Experience next-generation spatial computing. Transform your space into an interactive digital environment.</p>
+                    <div class="storage-options">
+                        <label>Storage Capacity:</label>
+                        <select id="overlayerd-storage" onchange="updatePrice('overlayerd')">
+                            <option value="64">64GB - ₹15,999</option>
+                            <option value="128">128GB - ₹19,999</option>
+                            <option value="256">256GB - ₹24,999</option>
+                        </select>
+                    </div>
+                    <p class="product-price" id="overlayerd-price">₹15,999</p>
+                    <button class="buy-button" onclick="initiatePayment('overlayerd')">Buy Now</button>
+                    <p class="price-note">*Inclusive of all taxes</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const products = {
+            nano: {
+                name: 'Nano_Process_On',
+                prices: {
+                    '32': 7999,
+                    '64': 9999,
+                    '128': 12999
+                }
+            },
+            overlayerd: {
+                name: 'Overlayerd',
+                prices: {
+                    '64': 15999,
+                    '128': 19999,
+                    '256': 24999
+                }
+            }
+        };
+
+        function updatePrice(product) {
+            const storage = document.getElementById(`${product}-storage`).value;
+            const price = products[product].prices[storage];
+            document.getElementById(`${product}-price`).textContent = `₹${price.toLocaleString('en-IN')}`;
+        }
+
+        function initiatePayment(product) {
+            const storage = document.getElementById(`${product}-storage`).value;
+            const amount = products[product].prices[storage] * 100; // Convert to paise
+            
+            const options = {
+                key: 'YOUR_RAZORPAY_KEY', // Replace with actual Razorpay key
+                amount: amount,
+                currency: 'INR',
+                name: 'Cygnus Technologies',
+                description: `${products[product].name} - ${storage}GB`,
+                handler: function(response) {
+                    alert('Payment successful! Order will be processed shortly.');
+                },
+                prefill: {
+                    name: '',
+                    email: '',
+                    contact: ''
+                },
+                theme: {
+                    color: '#6E3CBC'
+                },
+                notes: {
+                    product: products[product].name,
+                    storage: storage
+                }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+        }
+    </script>
+</body>
+</html>
