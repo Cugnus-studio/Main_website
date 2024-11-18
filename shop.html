@@ -345,12 +345,12 @@
             const amount = products[product].prices[storage] * 100; // Convert to paise
 
             const options = {
-                key: 'YOUR_RAZORPAY_KEY', // IMPORTANT: Replace with your actual key
+                key: 'rzp_live_zjGZq1OxpxAZ3n', // REPLACE WITH YOUR ACTUAL RAZORPAY KEY
                 amount: amount,
                 currency: 'INR',
                 name: 'Cygnus Studios',
                 description: `${products[product].name} - ${storage}GB`,
-                image: 'path/to/your/logo.png', // Optional: Company logo
+                image: 'https://example.com/your-logo.png', // Replace with your logo URL
                 handler: function(response) {
                     // Payment success handler
                     alert(`Payment Successful! 
