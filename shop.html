@@ -102,6 +102,12 @@
             justify-content: center;
         }
 
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
         .product-details {
             padding: 1.5rem;
         }
@@ -161,6 +167,36 @@
             margin-top: 0.5rem;
         }
 
+        #payment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .payment-form {
+            background: var(--light);
+            color: var(--dark);
+            padding: 2rem;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .payment-form input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -178,12 +214,23 @@
             <div class="logo">CYGNUS</div>
             <div class="nav-links">
                 <a href="index.html">Home</a>
-                 <a href="product.html">Prducts</a>
+                <a href="product.html">Products</a>
                 <a href="shop.html">Shop</a>
                 <a href="about.html">About</a>
             </div>
         </div>
     </nav>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="payment-modal">
+        <div class="payment-form">
+            <h2>Complete Your Purchase</h2>
+            <input type="text" id="customer-name" placeholder="Full Name" required>
+            <input type="email" id="customer-email" placeholder="Email Address" required>
+            <input type="tel" id="customer-phone" placeholder="Phone Number" required>
+            <button onclick="proceedPayment()">Proceed to Payment</button>
+        </div>
+    </div>
 
     <main class="main-content">
         <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Shop Our Products</h1>
@@ -206,7 +253,7 @@
                         </select>
                     </div>
                     <p class="product-price" id="nano-price">₹7,999</p>
-                    <button class="buy-button" onclick="initiatePayment('nano')">Buy Now</button>
+                    <button class="buy-button" onclick="initiatePurchase('nano')">Buy Now</button>
                     <p class="price-note">*Inclusive of all taxes</p>
                 </div>
             </div>
@@ -228,7 +275,7 @@
                         </select>
                     </div>
                     <p class="product-price" id="overlayerd-price">₹15,999</p>
-                    <button class="buy-button" onclick="initiatePayment('overlayerd')">Buy Now</button>
+                    <button class="buy-button" onclick="initiatePurchase('overlayerd')">Buy Now</button>
                     <p class="price-note">*Inclusive of all taxes</p>
                 </div>
             </div>
@@ -236,6 +283,7 @@
     </main>
 
     <script>
+        // Product Configuration
         const products = {
             nano: {
                 name: 'Nano_Process_On',
@@ -255,41 +303,110 @@
             }
         };
 
+        // Global variables to track current purchase
+        let currentProduct = null;
+        let currentStorage = null;
+
+        // Update Price Function
         function updatePrice(product) {
             const storage = document.getElementById(`${product}-storage`).value;
             const price = products[product].prices[storage];
             document.getElementById(`${product}-price`).textContent = `₹${price.toLocaleString('en-IN')}`;
         }
 
-        function initiatePayment(product) {
-            const storage = document.getElementById(`${product}-storage`).value;
-            const amount = products[product].prices[storage] * 100; // Convert to paise
+        // Initial Purchase Step
+        function initiatePurchase(product) {
+            // Set current product and open modal
+            currentProduct = product;
+            currentStorage = document.getElementById(`${product}-storage`).value;
             
+            // Show payment details modal
+            document.getElementById('payment-modal').style.display = 'flex';
+        }
+
+        // Proceed to Razorpay Payment
+        function proceedPayment() {
+            // Validate input fields
+            const name = document.getElementById('customer-name').value;
+            const email = document.getElementById('customer-email').value;
+            const phone = document.getElementById('customer-phone').value;
+
+            if (!name || !email || !phone) {
+                alert('Please fill in all customer details');
+                return;
+            }
+
+            // Hide modal
+            document.getElementById('payment-modal').style.display = 'none';
+
+            // Proceed with Razorpay
+            const product = currentProduct;
+            const storage = currentStorage;
+            const amount = products[product].prices[storage] * 100; // Convert to paise
+
             const options = {
-                key: 'rzp_live_zjGZq10xpxAZ3n', // Razorpay key
+                key: 'YOUR_RAZORPAY_KEY', // IMPORTANT: Replace with your actual key
                 amount: amount,
                 currency: 'INR',
                 name: 'Cygnus Studios',
                 description: `${products[product].name} - ${storage}GB`,
+                image: 'path/to/your/logo.png', // Optional: Company logo
                 handler: function(response) {
-                    alert('Payment successful! Order will be processed shortly.');
+                    // Payment success handler
+                    alert(`Payment Successful! 
+Payment ID: ${response.razorpay_payment_id}
+Product: ${products[product].name}
+Storage: ${storage}GB`);
+
+                    // Optional: Send payment details to your backend
+                    fetch('/process-payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            paymentId: response.razorpay_payment_id,
+                            product: products[product].name,
+                            storage: storage,
+                            amount: amount / 100,
+                            customerName: name,
+                            customerEmail: email,
+                            customerPhone: phone
+                        })
+                    }).catch(error => {
+                        console.error('Error sending payment details:', error);
+                    });
                 },
                 prefill: {
-                    name: '',
-                    email: '',
-                    contact: ''
-                },
-                theme: {
-                    color: '#6E3CBC'
+                    name: name,
+                    email: email,
+                    contact: phone
                 },
                 notes: {
                     product: products[product].name,
                     storage: storage
+                },
+                theme: {
+                    color: '#6E3CBC'
+                },
+                modal: {
+                    ondismiss: function() {
+                        console.log('Payment modal closed');
+                    }
+                },
+                error_handler: function(error) {
+                    console.error('Razorpay Error:', error);
+                    alert('Payment failed. ' + error.description);
                 }
             };
 
-            const rzp = new Razorpay(options);
-            rzp.open();
+            try {
+                const rzp = new Razorpay(options);
+                rzp.open();
+            } catch (error) {
+                console.error('Razorpay Initialization Error:', error);
+                alert('Unable to initialize payment. Please check console for details.');
+            }
         }
     </script>
 </body>
