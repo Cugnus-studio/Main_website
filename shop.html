@@ -207,7 +207,6 @@
             }
         }
 
-        /* Error Message Styles */
         .error-message {
             color: #ff4d4d;
             background: rgba(255, 77, 77, 0.1);
@@ -232,7 +231,6 @@
         </div>
     </nav>
 
-    <!-- Payment Modal -->
     <div id="payment-modal" class="payment-modal">
         <div class="payment-form">
             <h2>Complete Your Purchase</h2>
@@ -248,7 +246,6 @@
         <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Shop Our Products</h1>
         
         <div class="products-grid">
-            <!-- Nano_Process_On -->
             <div class="product-card">
                 <div class="product-image">
                     <img src="/api/placeholder/300/200" alt="Nano_Process_On">
@@ -271,7 +268,6 @@
                 </div>
             </div>
 
-            <!-- Overlayerd -->
             <div class="product-card">
                 <div class="product-image">
                     <img src="/api/placeholder/300/200" alt="Overlayerd">
@@ -455,15 +451,9 @@ Storage: ${storage}GB`);
                 }
             };
 
-            // Comprehensive Error Handling
-            const razorpayFailureHandlers = {
-                'payment.failed': function(response) {
-                    console.error('Razorpay Payment Failed', response);
-                    
-                    // Detailed error breakdown
-                    const errorDetails = {
-                        code: response.error.code,
-                        description: response.error.description,
-                        source: response.error.source,
-                        step: response.error.step,
-                        reason: response
+            const rzp1 = new Razorpay(options);
+            rzp1.open();
+        }
+    </script>
+</body>
+</html>
