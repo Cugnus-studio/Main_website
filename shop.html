@@ -206,6 +206,17 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Error Message Styles */
+        .error-message {
+            color: #ff4d4d;
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid #ff4d4d;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -225,6 +236,7 @@
     <div id="payment-modal" class="payment-modal">
         <div class="payment-form">
             <h2>Complete Your Purchase</h2>
+            <div id="payment-error" class="error-message"></div>
             <input type="text" id="customer-name" placeholder="Full Name" required>
             <input type="email" id="customer-email" placeholder="Email Address" required>
             <input type="tel" id="customer-phone" placeholder="Phone Number" required>
@@ -307,6 +319,20 @@
         let currentProduct = null;
         let currentStorage = null;
 
+        // Display Error Message
+        function showError(message) {
+            const errorElement = document.getElementById('payment-error');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        // Hide Error Message
+        function hideError() {
+            const errorElement = document.getElementById('payment-error');
+            errorElement.textContent = '';
+            errorElement.style.display = 'none';
+        }
+
         // Update Price Function
         function updatePrice(product) {
             const storage = document.getElementById(`${product}-storage`).value;
@@ -316,6 +342,9 @@
 
         // Initial Purchase Step
         function initiatePurchase(product) {
+            // Reset any previous errors
+            hideError();
+
             // Set current product and open modal
             currentProduct = product;
             currentStorage = document.getElementById(`${product}-storage`).value;
@@ -326,18 +355,29 @@
 
         // Proceed to Razorpay Payment
         function proceedPayment() {
+            // Reset any previous errors
+            hideError();
+
             // Validate input fields
             const name = document.getElementById('customer-name').value;
             const email = document.getElementById('customer-email').value;
             const phone = document.getElementById('customer-phone').value;
 
-            if (!name || !email || !phone) {
-                alert('Please fill in all customer details');
+            // Detailed input validation
+            if (!name) {
+                showError('Please enter your full name');
                 return;
             }
 
-            // Hide modal
-            document.getElementById('payment-modal').style.display = 'none';
+            if (!email || !email.includes('@')) {
+                showError('Please enter a valid email address');
+                return;
+            }
+
+            if (!phone || phone.length < 10) {
+                showError('Please enter a valid phone number');
+                return;
+            }
 
             // Proceed with Razorpay
             const product = currentProduct;
@@ -352,30 +392,32 @@
                 description: `${products[product].name} - ${storage}GB`,
                 image: 'https://example.com/your-logo.png', // Replace with your logo URL
                 handler: function(response) {
-                    // Payment success handler
-                    alert(`Payment Successful! 
+                    // Payment Success Handler
+                    if (response.razorpay_payment_id) {
+                        alert(`Payment Successful! 
 Payment ID: ${response.razorpay_payment_id}
 Product: ${products[product].name}
 Storage: ${storage}GB`);
 
-                    // Optional: Send payment details to your backend
-                    fetch('/process-payment', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            paymentId: response.razorpay_payment_id,
-                            product: products[product].name,
-                            storage: storage,
-                            amount: amount / 100,
-                            customerName: name,
-                            customerEmail: email,
-                            customerPhone: phone
-                        })
-                    }).catch(error => {
-                        console.error('Error sending payment details:', error);
-                    });
+                        // Optional: Send payment details to backend
+                        fetch('/process-payment', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                paymentId: response.razorpay_payment_id,
+                                product: products[product].name,
+                                storage: storage,
+                                amount: amount / 100,
+                                customerName: name,
+                                customerEmail: email,
+                                customerPhone: phone
+                            })
+                        }).catch(error => {
+                            console.error('Error sending payment details:', error);
+                        });
+                    }
                 },
                 prefill: {
                     name: name,
@@ -389,25 +431,37 @@ Storage: ${storage}GB`);
                 theme: {
                     color: '#6E3CBC'
                 },
-                modal: {
-                    ondismiss: function() {
-                        console.log('Payment modal closed');
+                config: {
+                    display: {
+                        blocks: {
+                            utib: { // Axis Bank
+                                name: 'Pay via Axis Bank',
+                                instruments: [
+                                    { method: 'netbanking' }
+                                ]
+                            }
+                        },
+                        hide: [
+                            { method: 'paylater' },
+                            { method: 'emi' }
+                        ],
+                        sequence: ['block.utib'],
+                        preferences: {
+                            show_default_checkoutpage: true
+                        }
                     }
-                },
-                error_handler: function(error) {
-                    console.error('Razorpay Error:', error);
-                    alert('Payment failed. ' + error.description);
                 }
             };
 
-            try {
-                const rzp = new Razorpay(options);
-                rzp.open();
-            } catch (error) {
-                console.error('Razorpay Initialization Error:', error);
-                alert('Unable to initialize payment. Please check console for details.');
-            }
-        }
-    </script>
-</body>
-</html>
+            // Comprehensive Error Handling
+            const razorpayFailureHandlers = {
+                'payment.failed': function(response) {
+                    console.error('Razorpay Payment Failed', response);
+                    
+                    // Detailed error breakdown
+                    const errorDetails = {
+                        code: response.error.code,
+                        description: response.error.description,
+                        source: response.error.source,
+                        step: response.error.step,
+                        reason: response
