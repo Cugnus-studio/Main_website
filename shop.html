@@ -266,10 +266,10 @@
             const amount = products[product].prices[storage] * 100; // Convert to paise
             
             const options = {
-                key: 'YOUR_RAZORPAY_KEY', // Replace with actual Razorpay key
+                key: 'rzp_live_zjGZq10xpxAZ3n', // Razorpay key
                 amount: amount,
                 currency: 'INR',
-                name: 'Cygnus Technologies',
+                name: 'Cygnus Studios',
                 description: `${products[product].name} - ${storage}GB`,
                 handler: function(response) {
                     alert('Payment successful! Order will be processed shortly.');
